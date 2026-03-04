@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth, UserRole } from "@/context/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
-import { GraduationCap, Lock, User, ArrowLeft, AlertCircle, Shield, BookOpen, Sparkles } from "lucide-react";
+import { GraduationCap, Lock, User, ArrowLeft, AlertCircle, Shield, BookOpen, Sparkles, Eye, EyeOff } from "lucide-react";
 
 const roleConfig: Record<UserRole, { label: string; hint: string; userLabel: string; icon: React.ReactNode }> = {
   student: { label: "Student Portal", hint: "Roll No: student · Pass: 123", userLabel: "Roll Number", icon: <GraduationCap size={20} /> },
@@ -16,6 +16,7 @@ const Login = () => {
   const [role, setRole] = useState<UserRole>(initialRole);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -115,12 +116,19 @@ const Login = () => {
                 <div className="relative">
                   <Lock size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
                   <input
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="input-field pl-11"
+                    className="input-field pl-11 pr-11"
                     placeholder="Enter password"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors focus:outline-none"
+                  >
+                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
                 </div>
               </div>
 

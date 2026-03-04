@@ -146,6 +146,15 @@ const Login = () => {
               <Sparkles size={14} className="text-primary shrink-0" />
               <p className="text-[11px] text-muted-foreground">{config.hint}</p>
             </div>
+
+            {role === "student" && (
+              <p className="text-center text-xs text-muted-foreground mt-4">
+                New student?{" "}
+                <button type="button" onClick={() => navigate("/register")} className="text-primary font-semibold hover:underline">
+                  Register here
+                </button>
+              </p>
+            )}
           </div>
         </motion.div>
       </div>

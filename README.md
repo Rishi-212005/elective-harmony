@@ -1,73 +1,270 @@
-# Welcome to your Lovable project
+# Elective Harmony 🎓
 
-## Project info
+A modern, intelligent web application for managing elective course allocation in educational institutions. Built with React, TypeScript, and Vite.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## 🌟 Features
 
-## How can I edit this code?
+### Multi-Role Dashboard System
+- **Student Dashboard**: Browse electives, set preferences, view AI recommendations, and track allocation results
+- **Admin Dashboard**: Manage electives, students, and oversee the allocation process
+- **Faculty Dashboard**: View assigned electives and student information
 
-There are several ways of editing your application.
+### Core Functionality
+- ✨ **Elective Management**: Create, view, and manage elective courses with seat tracking
+- 🎯 **Preference Selection**: Students can select 3-10 preferred electives
+- 🤖 **AI Recommendations**: Smart elective suggestions based on student profiles and CGPA
+- 📊 **Real-time Analytics**: Track seat utilization, elective popularity, and allocation fairness
+- 🔄 **Multi-Round Allocation**: CGPA-based priority allocation system
+- 📈 **Fairness Metrics**: Monitor allocation satisfaction across different CGPA ranges
+- 🎨 **Modern UI/UX**: Beautiful, responsive design with smooth animations using Framer Motion
 
-**Use Lovable**
+## 🚀 Tech Stack
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+### Frontend Framework
+- **React 18.3** - UI library
+- **TypeScript 5.8** - Type safety
+- **Vite 5.4** - Build tool and dev server
 
-Changes made via Lovable will be committed automatically to this repo.
+### UI & Styling
+- **Tailwind CSS** - Utility-first CSS framework
+- **Shadcn UI** - Beautiful component library
+- **Radix UI** - Accessible UI primitives
+- **Framer Motion** - Animation library
+- **Lucide Icons** - Icon library
 
-**Use your preferred IDE**
+### State Management & Routing
+- **React Router v6** - Client-side routing
+- **React Context API** - Authentication state management
+- **TanStack Query (React Query)** - Server state management
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Form Handling & Validation
+- **React Hook Form** - Form management
+- **Zod** - Schema validation
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Data Visualization
+- **Recharts** - Charts and data visualization
 
-Follow these steps:
+### Testing
+- **Vitest** - Unit testing framework
+- **React Testing Library** - Component testing
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## 📁 Project Structure
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+```
+elective-harmony/
+├── public/                 # Static assets
+├── src/
+│   ├── components/        # Reusable UI components
+│   │   ├── ui/           # Shadcn UI components
+│   │   ├── AppSidebar.tsx
+│   │   ├── DashboardLayout.tsx
+│   │   ├── ElectiveCard.tsx
+│   │   ├── NavLink.tsx
+│   │   └── StatCard.tsx
+│   ├── context/          # React Context providers
+│   │   └── AuthContext.tsx
+│   ├── data/             # Mock data and types
+│   │   └── mockData.ts
+│   ├── hooks/            # Custom React hooks
+│   ├── lib/              # Utility functions
+│   ├── pages/            # Page components
+│   │   ├── Admin*.tsx    # Admin pages
+│   │   ├── Student*.tsx  # Student pages
+│   │   ├── Faculty*.tsx  # Faculty pages
+│   │   └── Login.tsx
+│   ├── App.tsx           # Main app component
+│   └── main.tsx          # Entry point
+└── package.json
+```
 
-# Step 3: Install the necessary dependencies.
-npm i
+## 🛠️ Installation & Setup
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+### Prerequisites
+- Node.js (v18 or higher)
+- npm or yarn
+
+### Quick Start
+
+```bash
+# Clone the repository
+git clone <your-repo-url>
+cd elective-harmony
+
+# Install dependencies
+npm install
+
+# Start development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+The application will be available at `http://localhost:8080`
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Build for Production
 
-**Use GitHub Codespaces**
+```bash
+# Production build
+npm run build
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+# Preview production build
+npm run preview
+```
 
-## What technologies are used for this project?
+## 👤 User Credentials
 
-This project is built with:
+### Demo Login Credentials
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+**Student Account:**
+- Username: `student`
+- Password: `123`
 
-## How can I deploy this project?
+**Admin Account:**
+- Username: `admin`
+- Password: `admin123`
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+**Faculty Account:**
+- Username: `faculty`
+- Password: `faculty123`
 
-## Can I connect a custom domain to my Lovable project?
+## 📱 Available Routes
 
-Yes, you can!
+### Public Routes
+- `/` - Landing page
+- `/login` - Login page
+- `/register` - Student registration
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+### Protected Routes (Student)
+- `/dashboard/student` - Student dashboard
+- `/student/profile` - Student profile
+- `/elective-selection` - Browse and select electives
+- `/preference-checkout` - Review and submit preferences
+- `/allocation-result` - View allocation results
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+### Protected Routes (Admin)
+- `/dashboard/admin` - Admin dashboard
+- `/admin/electives` - Manage electives
+- `/admin/students` - Manage students
+- `/admin/allocation` - Allocation controls
+- `/analytics` - Analytics dashboard
+
+### Protected Routes (Faculty)
+- `/dashboard/faculty` - Faculty dashboard
+
+## 🎨 Key Components
+
+### ElectiveCard
+Displays elective information with:
+- Course code and name
+- Faculty details
+- Description
+- Seat availability (removed as per recent update)
+- Select/deselect functionality
+
+### DashboardLayout
+Consistent layout wrapper with:
+- Sidebar navigation
+- Header with user info
+- Responsive design
+
+### StatCard
+Statistics display component showing:
+- Metric value
+- Icon
+- Description
+- Trend indicators
+
+## 📊 Data Models
+
+### Elective
+```typescript
+interface Elective {
+  id: string;
+  code: string;
+  name: string;
+  faculty: string;
+  department: string;
+  totalSeats: number;
+  remainingSeats: number;
+  description: string;
+}
+```
+
+### Student
+```typescript
+interface Student {
+  id: string;
+  name: string;
+  rollNumber: string;
+  department: string;
+  semester: number;
+  cgpa: number;
+  preferences: string[];
+  allocatedElective?: string;
+}
+```
+
+## 🔧 Development Commands
+
+```bash
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Build in development mode
+npm run build:dev
+
+# Run linter
+npm run lint
+
+# Run tests
+npm run test
+
+# Run tests in watch mode
+npm run test:watch
+```
+
+## 🎯 Features in Detail
+
+### Preference Selection System
+- Minimum 3 preferences required
+- Maximum 10 preferences allowed
+- Real-time count and validation
+- Visual preference ordering
+
+### Allocation Algorithm
+- CGPA-based priority system
+- Multiple allocation rounds
+- Fair distribution mechanism
+- Tie-breaking rules
+- Seat capacity enforcement
+
+### Analytics Dashboard
+- Elective popularity charts
+- Seat utilization metrics
+- Allocation round statistics
+- Fairness analysis by CGPA range
+- Satisfaction scores
+
+## 🌐 Browser Support
+
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
+
+## 📝 License
+
+This project is private and proprietary.
+
+## 🤝 Contributing
+
+This is a private project. For contributions, please contact the maintainers.
+
+## 📞 Support
+
+For issues or questions, please open an issue in the repository.
+
+---
+
+**Built with ❤️ using React, TypeScript, and Vite**

@@ -68,27 +68,6 @@ const ElectiveCard: React.FC<ElectiveCardProps> = ({
           </span>
         </div>
 
-        {/* Seat progress */}
-        <div className="space-y-2">
-          <div className="flex justify-between text-xs">
-            <span className="flex items-center gap-1.5 text-muted-foreground">
-              <Users size={12} />
-              Seats
-            </span>
-            <span className="font-semibold text-foreground">
-              {elective.totalSeats - elective.remainingSeats}/{elective.totalSeats}
-            </span>
-          </div>
-          <div className="progress-bar">
-            <div className="progress-bar-fill" style={{ width: `${fillPercent}%` }} />
-          </div>
-          {isAlmostFull && (
-            <p className="text-[10px] font-semibold text-warning">
-              ⚡ Only {elective.remainingSeats} seats left!
-            </p>
-          )}
-        </div>
-
         {/* Select button */}
         {selectable && (
           <button

@@ -10,6 +10,9 @@ import StudentRegister from "./pages/StudentRegister";
 import StudentDashboard from "./pages/StudentDashboard";
 import StudentProfile from "./pages/StudentProfile";
 import AdminDashboard from "./pages/AdminDashboard";
+import AdminElectives from "./pages/AdminElectives";
+import AdminStudents from "./pages/AdminStudents";
+import AdminAllocation from "./pages/AdminAllocation";
 import FacultyDashboard from "./pages/FacultyDashboard";
 import ElectiveSelection from "./pages/ElectiveSelection";
 import PreferenceCheckout from "./pages/PreferenceCheckout";
@@ -34,6 +37,9 @@ const AppRoutes = () => (
     <Route path="/dashboard/student" element={<ProtectedRoute role="student"><StudentDashboard /></ProtectedRoute>} />
     <Route path="/student/profile" element={<ProtectedRoute role="student"><StudentProfile /></ProtectedRoute>} />
     <Route path="/dashboard/admin" element={<ProtectedRoute role="admin"><AdminDashboard /></ProtectedRoute>} />
+    <Route path="/admin/electives" element={<ProtectedRoute role="admin"><AdminElectives /></ProtectedRoute>} />
+    <Route path="/admin/students" element={<ProtectedRoute role="admin"><AdminStudents /></ProtectedRoute>} />
+    <Route path="/admin/allocation" element={<ProtectedRoute role="admin"><AdminAllocation /></ProtectedRoute>} />
     <Route path="/dashboard/faculty" element={<ProtectedRoute role="faculty"><FacultyDashboard /></ProtectedRoute>} />
     <Route path="/elective-selection" element={<ProtectedRoute role="student"><ElectiveSelection /></ProtectedRoute>} />
     <Route path="/preference-checkout" element={<ProtectedRoute role="student"><PreferenceCheckout /></ProtectedRoute>} />

@@ -205,35 +205,6 @@ const Landing = () => {
               </div>
             </motion.div>
           </div>
-
-          {/* Floating cards - positioned below hero text on the right, hidden on mobile */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1, duration: 1 }}
-            className="hidden xl:flex absolute right-12 bottom-20 flex-col gap-4"
-          >
-            <motion.div animate={{ y: [-8, 8, -8] }} transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}>
-              <div className="w-52 p-4 rounded-2xl bg-[hsl(0,0%,100%)]/5 backdrop-blur-xl border border-[hsl(0,0%,100%)]/10">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-2 h-2 rounded-full bg-success" />
-                  <span className="text-[10px] font-semibold text-[hsl(0,0%,100%)]/50">LIVE</span>
-                </div>
-                <p className="text-2xl font-display font-bold text-[hsl(0,0%,100%)]">847</p>
-                <p className="text-[10px] text-[hsl(0,0%,100%)]/40">Students allocated</p>
-              </div>
-            </motion.div>
-            <motion.div animate={{ y: [6, -6, 6] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}>
-              <div className="w-52 p-4 rounded-2xl bg-[hsl(0,0%,100%)]/5 backdrop-blur-xl border border-[hsl(0,0%,100%)]/10">
-                <div className="flex items-center gap-2 mb-2">
-                  <Shuffle size={12} className="text-[hsl(0,0%,100%)]/50" />
-                  <span className="text-[10px] font-semibold text-[hsl(0,0%,100%)]/50">ROUNDS</span>
-                </div>
-                <p className="text-2xl font-display font-bold text-[hsl(0,0%,100%)]">5</p>
-                <p className="text-[10px] text-[hsl(0,0%,100%)]/40">Allocation rounds completed</p>
-              </div>
-            </motion.div>
-          </motion.div>
         </div>
       </section>
 

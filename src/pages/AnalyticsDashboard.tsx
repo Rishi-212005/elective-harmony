@@ -1,12 +1,12 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  PieChart, Pie, Cell, AreaChart, Area,
+  PieChart, Pie, Cell, AreaChart, Area, LineChart, Line, Legend,
 } from "recharts";
 import DashboardLayout from "@/components/DashboardLayout";
 import StatCard from "@/components/StatCard";
-import { students, electives, electivePopularity, seatUtilization, allocationRounds, fairnessData } from "@/data/mockData";
+import { students, electives, electivePopularity, seatUtilization, fairnessData } from "@/data/mockData";
 import { Users, BookOpen, TrendingUp, CheckCircle, BarChart3, Activity, Eye, Shield, Play, Pause } from "lucide-react";
 
 const COLORS = ["#3b82f6", "#6366f1", "#8b5cf6", "#06b6d4", "#10b981", "#f59e0b", "#ef4444", "#ec4899"];
@@ -23,9 +23,46 @@ const trendData = [
 
 const allocated = students.filter((s) => s.allocatedElective).length;
 
+// Simulate allocation rounds based on seat limit
+const generateRounds = (seatLimit: number) => {
+  const totalStudents = students.length;
+  const electiveCount = electives.length;
+  const totalCapacity = seatLimit * electiveCount;
+  const ratio = Math.min(totalCapacity / (totalStudents * 1.2), 1);
+
+  const round1 = Math.min(Math.round(totalStudents * 0.15 * ratio + (seatLimit - 70) * 0.05), totalStudents);
+  const round2 = Math.min(Math.round(totalStudents * 0.45 * ratio + (seatLimit - 70) * 0.08), totalStudents);
+  const round3 = Math.min(Math.round(totalStudents * 0.75 * ratio + (seatLimit - 70) * 0.1), totalStudents);
+  const round4 = Math.min(Math.round(totalStudents * 0.9 * ratio + (seatLimit - 70) * 0.06), totalStudents);
+  const round5 = Math.min(Math.round(totalStudents * ratio), totalStudents);
+
+  return [
+    { round: 1, allocated: Math.max(round1, 1), description: "CGPA 9.0+ students matched first" },
+    { round: 2, allocated: Math.max(round2, round1 + 1), description: "CGPA 8.0–9.0 students processed" },
+    { round: 3, allocated: Math.max(round3, round2 + 1), description: "CGPA 7.0–8.0 students assigned" },
+    { round: 4, allocated: Math.min(Math.max(round4, round3), totalStudents), description: "Remaining with tie-breaking" },
+    { round: 5, allocated: Math.min(round5, totalStudents), description: `Final round (limit: ${seatLimit}/elective)` },
+  ];
+};
+
 const AnalyticsDashboard = () => {
-  const [activeRound, setActiveRound] = useState(0);
+  const [seatLimit, setSeatLimit] = useState(70);
+  const [activeRound, setActiveRound] = useState(-1);
   const [simulating, setSimulating] = useState(false);
+
+  const rounds = useMemo(() => generateRounds(seatLimit), [seatLimit]);
+
+  // Build chart data for the line graph comparing rounds across limits
+  const comparisonData = useMemo(() => {
+    return [1, 2, 3, 4, 5].map((r) => {
+      const row: Record<string, number | string> = { round: `Round ${r}` };
+      [50, 70, 90, 100, 120].forEach((limit) => {
+        const gen = generateRounds(limit);
+        row[`${limit} seats`] = gen[r - 1].allocated;
+      });
+      return row;
+    });
+  }, []);
 
   const startSimulation = () => {
     setSimulating(true);
@@ -33,13 +70,13 @@ const AnalyticsDashboard = () => {
     let round = 0;
     const interval = setInterval(() => {
       round++;
-      if (round >= allocationRounds.length) {
+      if (round >= rounds.length) {
         clearInterval(interval);
         setSimulating(false);
         return;
       }
       setActiveRound(round);
-    }, 1500);
+    }, 1200);
   };
 
   return (
@@ -59,22 +96,54 @@ const AnalyticsDashboard = () => {
             <Eye size={18} className="text-primary" />
             <h3 className="font-display font-bold text-foreground text-sm sm:text-base">Allocation Round Visualization</h3>
           </div>
-          <button
-            onClick={startSimulation}
-            disabled={simulating}
-            className="btn-primary flex items-center gap-2 text-xs disabled:opacity-50"
-          >
-            {simulating ? <><Pause size={14} /> Simulating...</> : <><Play size={14} /> Run Simulation</>}
-          </button>
+          <div className="flex items-center gap-3 flex-wrap">
+            <div className="flex items-center gap-2">
+              <label className="text-xs font-semibold text-muted-foreground whitespace-nowrap">Seat Limit / Elective:</label>
+              <input
+                type="number"
+                value={seatLimit}
+                onChange={(e) => {
+                  const v = Math.max(10, Number(e.target.value));
+                  setSeatLimit(v);
+                  setActiveRound(-1);
+                }}
+                className="input-field w-20 text-center text-sm"
+                min={10}
+                step={10}
+              />
+            </div>
+            <div className="flex gap-1.5">
+              {[50, 70, 90, 100, 120].map((v) => (
+                <button
+                  key={v}
+                  onClick={() => { setSeatLimit(v); setActiveRound(-1); }}
+                  className={`px-2.5 py-1.5 rounded-lg text-[11px] font-semibold transition-all ${
+                    seatLimit === v ? "gradient-primary text-primary-foreground shadow-glow-sm" : "bg-muted/50 text-muted-foreground hover:bg-muted"
+                  }`}
+                >
+                  {v}
+                </button>
+              ))}
+            </div>
+            <button
+              onClick={startSimulation}
+              disabled={simulating}
+              className="btn-primary flex items-center gap-2 text-xs disabled:opacity-50"
+            >
+              {simulating ? <><Pause size={14} /> Simulating...</> : <><Play size={14} /> Run Simulation</>}
+            </button>
+          </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-5 gap-3">
-          {allocationRounds.map((round, i) => (
+
+        {/* Round cards */}
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-6">
+          {rounds.map((round, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0.4, scale: 0.95 }}
               animate={{
                 opacity: i <= activeRound ? 1 : 0.4,
-                scale: i === activeRound ? 1.02 : 0.95,
+                scale: i === activeRound ? 1.03 : 0.95,
                 borderColor: i === activeRound ? "hsl(221,83%,53%)" : "hsl(220,13%,91%)",
               }}
               transition={{ duration: 0.4 }}
@@ -90,6 +159,40 @@ const AnalyticsDashboard = () => {
               )}
             </motion.div>
           ))}
+        </div>
+
+        {/* Allocation progress bar chart */}
+        <div className="grid lg:grid-cols-2 gap-5">
+          <div>
+            <p className="text-xs font-semibold text-muted-foreground mb-3">Cumulative Allocation (Limit: {seatLimit})</p>
+            <ResponsiveContainer width="100%" height={200}>
+              <BarChart data={rounds.map((r) => ({ name: `R${r.round}`, allocated: r.allocated, unallocated: students.length - r.allocated }))}>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(220,13%,91%)" />
+                <XAxis dataKey="name" tick={{ fontSize: 11, fill: "hsl(220,9%,46%)" }} />
+                <YAxis tick={{ fontSize: 11, fill: "hsl(220,9%,46%)" }} domain={[0, students.length]} />
+                <Tooltip contentStyle={{ borderRadius: "0.75rem", border: "1px solid hsl(220,13%,91%)", fontSize: 12 }} />
+                <Bar dataKey="allocated" name="Allocated" fill="#3b82f6" radius={[6, 6, 0, 0]} />
+                <Bar dataKey="unallocated" name="Remaining" fill="#e2e8f0" radius={[6, 6, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+          <div>
+            <p className="text-xs font-semibold text-muted-foreground mb-3">Comparison Across Seat Limits</p>
+            <ResponsiveContainer width="100%" height={200}>
+              <LineChart data={comparisonData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(220,13%,91%)" />
+                <XAxis dataKey="round" tick={{ fontSize: 11, fill: "hsl(220,9%,46%)" }} />
+                <YAxis tick={{ fontSize: 11, fill: "hsl(220,9%,46%)" }} domain={[0, students.length]} />
+                <Tooltip contentStyle={{ borderRadius: "0.75rem", border: "1px solid hsl(220,13%,91%)", fontSize: 12 }} />
+                <Legend wrapperStyle={{ fontSize: 10 }} />
+                <Line type="monotone" dataKey="50 seats" stroke="#ef4444" strokeWidth={2} dot={{ r: 3 }} />
+                <Line type="monotone" dataKey="70 seats" stroke="#3b82f6" strokeWidth={2.5} dot={{ r: 3 }} />
+                <Line type="monotone" dataKey="90 seats" stroke="#8b5cf6" strokeWidth={2} dot={{ r: 3 }} />
+                <Line type="monotone" dataKey="100 seats" stroke="#10b981" strokeWidth={2} dot={{ r: 3 }} />
+                <Line type="monotone" dataKey="120 seats" stroke="#f59e0b" strokeWidth={2} dot={{ r: 3 }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       </motion.div>
 

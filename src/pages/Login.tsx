@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth, UserRole } from "@/context/AuthContext";
-import { motion } from "framer-motion";
-import { GraduationCap, Lock, User, ArrowLeft, AlertCircle } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { GraduationCap, Lock, User, ArrowLeft, AlertCircle, Shield, BookOpen, Sparkles } from "lucide-react";
 
-const roleConfig: Record<UserRole, { label: string; hint: string; userLabel: string }> = {
-  student: { label: "Student Login", hint: "Roll No: student / Pass: 123", userLabel: "Roll Number" },
-  admin: { label: "Admin Login", hint: "Username: admin / Pass: admin123", userLabel: "Username" },
-  faculty: { label: "Faculty Login", hint: "Username: faculty / Pass: faculty123", userLabel: "Username" },
+const roleConfig: Record<UserRole, { label: string; hint: string; userLabel: string; icon: React.ReactNode }> = {
+  student: { label: "Student Portal", hint: "Roll No: student · Pass: 123", userLabel: "Roll Number", icon: <GraduationCap size={20} /> },
+  admin: { label: "Admin Portal", hint: "Username: admin · Pass: admin123", userLabel: "Username", icon: <Shield size={20} /> },
+  faculty: { label: "Faculty Portal", hint: "Username: faculty · Pass: faculty123", userLabel: "Username", icon: <BookOpen size={20} /> },
 };
 
 const Login = () => {
@@ -34,91 +34,121 @@ const Login = () => {
   const config = roleConfig[role];
 
   return (
-    <div className="min-h-screen gradient-hero flex items-center justify-center px-4">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="w-full max-w-md"
-      >
-        <button
+    <div className="min-h-screen relative flex items-center justify-center px-4">
+      {/* Background */}
+      <div className="absolute inset-0 gradient-hero" />
+      <div className="absolute inset-0">
+        <div className="absolute top-1/3 left-1/3 w-96 h-96 rounded-full bg-primary/10 blur-[128px] animate-pulse-glow" />
+        <div className="absolute bottom-1/3 right-1/3 w-80 h-80 rounded-full bg-secondary/10 blur-[128px] animate-pulse-glow" style={{ animationDelay: "2s" }} />
+      </div>
+      <div className="absolute inset-0 opacity-[0.02]" style={{
+        backgroundImage: "linear-gradient(rgba(255,255,255,.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.1) 1px, transparent 1px)",
+        backgroundSize: "40px 40px",
+      }} />
+
+      <div className="relative z-10 w-full max-w-md">
+        <motion.button
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           onClick={() => navigate("/")}
-          className="flex items-center gap-1.5 text-primary-foreground/60 hover:text-primary-foreground text-sm mb-6 transition-colors"
+          className="flex items-center gap-2 text-primary-foreground/40 hover:text-primary-foreground/70 text-sm mb-8 transition-colors"
         >
           <ArrowLeft size={16} /> Back to Home
-        </button>
+        </motion.button>
 
-        <div className="glass-card p-8">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center">
-              <GraduationCap className="text-primary-foreground" size={22} />
+        <motion.div
+          initial={{ opacity: 0, y: 30, scale: 0.97 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.6 }}
+          className="bg-card/95 backdrop-blur-2xl rounded-3xl border border-border/50 shadow-xl overflow-hidden"
+        >
+          {/* Header */}
+          <div className="p-8 pb-0">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-11 h-11 rounded-2xl gradient-primary flex items-center justify-center shadow-glow-sm">
+                <GraduationCap className="text-primary-foreground" size={20} />
+              </div>
+              <div>
+                <h1 className="font-display font-bold text-xl text-foreground">{config.label}</h1>
+                <p className="text-xs text-muted-foreground">Sign in to continue</p>
+              </div>
             </div>
-            <h1 className="font-display font-bold text-xl text-foreground">{config.label}</h1>
           </div>
 
-          {/* Role Tabs */}
-          <div className="flex gap-1 p-1 bg-secondary rounded-lg mb-6">
-            {(["student", "admin", "faculty"] as const).map((r) => (
-              <button
-                key={r}
-                onClick={() => { setRole(r); setError(""); }}
-                className={`flex-1 py-2 text-sm font-medium rounded-md transition-all ${
-                  role === r
-                    ? "bg-card text-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {r.charAt(0).toUpperCase() + r.slice(1)}
+          <div className="p-8">
+            {/* Role Tabs */}
+            <div className="flex gap-1 p-1 bg-muted/80 rounded-2xl mb-8">
+              {(["student", "admin", "faculty"] as const).map((r) => (
+                <button
+                  key={r}
+                  onClick={() => { setRole(r); setError(""); setUsername(""); setPassword(""); }}
+                  className={`flex-1 flex items-center justify-center gap-2 py-2.5 text-xs font-semibold rounded-xl transition-all duration-300 ${
+                    role === r
+                      ? "bg-card text-foreground shadow-md"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {r === "student" && <GraduationCap size={14} />}
+                  {r === "admin" && <Shield size={14} />}
+                  {r === "faculty" && <BookOpen size={14} />}
+                  {r.charAt(0).toUpperCase() + r.slice(1)}
+                </button>
+              ))}
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div>
+                <label className="block text-xs font-semibold text-foreground mb-2">{config.userLabel}</label>
+                <div className="relative">
+                  <User size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                  <input
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    className="input-field pl-11"
+                    placeholder={`Enter ${config.userLabel.toLowerCase()}`}
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-foreground mb-2">Password</label>
+                <div className="relative">
+                  <Lock size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="input-field pl-11"
+                    placeholder="Enter password"
+                  />
+                </div>
+              </div>
+
+              <AnimatePresence>
+                {error && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    className="flex items-center gap-2 text-xs font-medium text-destructive bg-destructive/8 rounded-xl px-4 py-3"
+                  >
+                    <AlertCircle size={14} /> {error}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              <button type="submit" className="btn-primary w-full py-3.5 text-sm">
+                Sign In
               </button>
-            ))}
+            </form>
+
+            <div className="mt-6 flex items-center gap-2 px-4 py-3 rounded-xl bg-muted/50 border border-border/50">
+              <Sparkles size={14} className="text-primary shrink-0" />
+              <p className="text-[11px] text-muted-foreground">{config.hint}</p>
+            </div>
           </div>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-1.5">{config.userLabel}</label>
-              <div className="relative">
-                <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                <input
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
-                  placeholder={`Enter ${config.userLabel.toLowerCase()}`}
-                />
-              </div>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-1.5">Password</label>
-              <div className="relative">
-                <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
-                  placeholder="Enter password"
-                />
-              </div>
-            </div>
-
-            {error && (
-              <div className="flex items-center gap-2 text-sm text-destructive">
-                <AlertCircle size={14} /> {error}
-              </div>
-            )}
-
-            <button
-              type="submit"
-              className="w-full py-2.5 rounded-lg gradient-primary text-primary-foreground font-medium text-sm hover:opacity-90 transition-opacity"
-            >
-              Sign In
-            </button>
-          </form>
-
-          <p className="mt-4 text-xs text-muted-foreground text-center bg-secondary/50 rounded-lg p-2">
-            💡 {config.hint}
-          </p>
-        </div>
-      </motion.div>
+        </motion.div>
+      </div>
     </div>
   );
 };

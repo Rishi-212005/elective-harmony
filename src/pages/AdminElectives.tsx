@@ -10,26 +10,28 @@ const AdminElectives = () => {
   const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [search, setSearch] = useState("");
+  const [semesterFilter, setSemesterFilter] = useState("");
   const [form, setForm] = useState({
-    code: "", name: "", faculty: "", department: "", totalSeats: 70, description: "",
+    code: "", name: "", faculty: "", department: "", totalSeats: 70, description: "", semester: "3-1",
   });
 
   const filtered = electivesList.filter(
     (e) =>
-      e.name.toLowerCase().includes(search.toLowerCase()) ||
+      (e.name.toLowerCase().includes(search.toLowerCase()) ||
       e.code.toLowerCase().includes(search.toLowerCase()) ||
-      e.department.toLowerCase().includes(search.toLowerCase())
+      e.department.toLowerCase().includes(search.toLowerCase())) &&
+      (semesterFilter === "" || e.semester === semesterFilter)
   );
 
   const openAdd = () => {
     setEditingId(null);
-    setForm({ code: "", name: "", faculty: "", department: "", totalSeats: 70, description: "" });
+    setForm({ code: "", name: "", faculty: "", department: "", totalSeats: 70, description: "", semester: "3-1" });
     setShowModal(true);
   };
 
   const openEdit = (e: Elective) => {
     setEditingId(e.id);
-    setForm({ code: e.code, name: e.name, faculty: e.faculty, department: e.department, totalSeats: e.totalSeats, description: e.description });
+    setForm({ code: e.code, name: e.name, faculty: e.faculty, department: e.department, totalSeats: e.totalSeats, description: e.description, semester: e.semester });
     setShowModal(true);
   };
 
@@ -63,6 +65,17 @@ const AdminElectives = () => {
             className="input-field pl-9 w-full"
           />
         </div>
+        <select
+          value={semesterFilter}
+          onChange={(e) => setSemesterFilter(e.target.value)}
+          className="input-field w-full sm:w-40"
+        >
+          <option value="">All Semesters</option>
+          <option value="3-1">Semester 3-1</option>
+          <option value="3-2">Semester 3-2</option>
+          <option value="4-1">Semester 4-1</option>
+          <option value="4-2">Semester 4-2</option>
+        </select>
         <button onClick={openAdd} className="btn-primary flex items-center gap-2 text-sm whitespace-nowrap">
           <Plus size={16} /> Add Elective
         </button>
@@ -81,12 +94,13 @@ const AdminElectives = () => {
               className="glass-card-elevated p-5 flex flex-col gap-3"
             >
               <div className="flex items-start justify-between">
-                <div>
+                <div className="flex gap-2 flex-wrap items-center">
                   <span className="badge-primary text-[10px] mb-1 inline-block">{e.code}</span>
-                  <h4 className="font-display font-bold text-foreground text-sm">{e.name}</h4>
+                  <span className="badge-secondary text-[10px] mb-1 inline-block">{e.semester}</span>
                 </div>
                 <BookOpen size={18} className="text-primary shrink-0" />
               </div>
+              <h4 className="font-display font-bold text-foreground text-sm">{e.name}</h4>
               <p className="text-xs text-muted-foreground">{e.faculty}</p>
               <p className="text-xs text-muted-foreground">{e.department}</p>
               <div>
@@ -137,9 +151,20 @@ const AdminElectives = () => {
                     <input value={form[f.key]} onChange={(e) => setForm((prev) => ({ ...prev, [f.key]: e.target.value }))} className="input-field" placeholder={f.placeholder} />
                   </div>
                 ))}
-                <div>
-                  <label className="block text-xs font-semibold text-foreground mb-1.5">Total Seats</label>
-                  <input type="number" value={form.totalSeats} onChange={(e) => setForm((prev) => ({ ...prev, totalSeats: Number(e.target.value) }))} className="input-field" />
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-foreground mb-1.5">Semester</label>
+                    <select value={form.semester} onChange={(e) => setForm((prev) => ({ ...prev, semester: e.target.value }))} className="input-field">
+                      <option value="3-1">Semester 3-1</option>
+                      <option value="3-2">Semester 3-2</option>
+                      <option value="4-1">Semester 4-1</option>
+                      <option value="4-2">Semester 4-2</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-foreground mb-1.5">Total Seats</label>
+                    <input type="number" value={form.totalSeats} onChange={(e) => setForm((prev) => ({ ...prev, totalSeats: Number(e.target.value) }))} className="input-field" />
+                  </div>
                 </div>
               </div>
               <div className="flex gap-3 p-5 pt-0">

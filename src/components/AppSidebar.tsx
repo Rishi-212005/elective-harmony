@@ -48,7 +48,6 @@ const adminNav: NavItem[] = [
   { title: "Students", url: "/admin/students", icon: Users },
   { title: "Allocation", url: "/admin/allocation", icon: ListChecks },
   { title: "Analytics", url: "/analytics", icon: BarChart3 },
-  { title: "Settings", url: "/dashboard/admin", icon: Settings },
 ];
 
 const facultyNav: NavItem[] = [

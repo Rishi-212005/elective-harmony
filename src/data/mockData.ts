@@ -7,6 +7,7 @@ export interface Elective {
   totalSeats: number;
   remainingSeats: number;
   description: string;
+  semester: string;
 }
 
 export interface Student {
@@ -21,14 +22,14 @@ export interface Student {
 }
 
 export const electives: Elective[] = [
-  { id: "1", code: "CS401", name: "Machine Learning", faculty: "Dr. Priya Sharma", department: "Computer Science", totalSeats: 70, remainingSeats: 12, description: "Introduction to supervised and unsupervised learning algorithms." },
-  { id: "2", code: "CS402", name: "Cyber Security", faculty: "Dr. Rajeev Kumar", department: "Computer Science", totalSeats: 70, remainingSeats: 8, description: "Fundamentals of network security and ethical hacking." },
-  { id: "3", code: "EC401", name: "IoT Systems", faculty: "Dr. Anita Desai", department: "Electronics", totalSeats: 70, remainingSeats: 30, description: "Design and implementation of Internet of Things systems." },
-  { id: "4", code: "CS403", name: "Cloud Computing", faculty: "Prof. Vikram Patel", department: "Computer Science", totalSeats: 70, remainingSeats: 5, description: "Cloud infrastructure, services, and deployment models." },
-  { id: "5", code: "ME401", name: "Robotics", faculty: "Dr. Suresh Nair", department: "Mechanical", totalSeats: 70, remainingSeats: 25, description: "Fundamentals of robot kinematics and control systems." },
-  { id: "6", code: "CS404", name: "Blockchain Technology", faculty: "Dr. Meena Iyer", department: "Computer Science", totalSeats: 70, remainingSeats: 32, description: "Distributed ledger technology and smart contracts." },
-  { id: "7", code: "CS405", name: "Natural Language Processing", faculty: "Dr. Arjun Reddy", department: "Computer Science", totalSeats: 70, remainingSeats: 10, description: "Text processing, sentiment analysis, and language models." },
-  { id: "8", code: "EC402", name: "VLSI Design", faculty: "Prof. Kavitha Rao", department: "Electronics", totalSeats: 70, remainingSeats: 28, description: "Very Large Scale Integration design and verification." },
+  { id: "1", code: "CS401", name: "Machine Learning", faculty: "Dr. Priya Sharma", department: "Computer Science", totalSeats: 70, remainingSeats: 12, description: "Introduction to supervised and unsupervised learning algorithms.", semester: "3-1" },
+  { id: "2", code: "CS402", name: "Cyber Security", faculty: "Dr. Rajeev Kumar", department: "Computer Science", totalSeats: 70, remainingSeats: 8, description: "Fundamentals of network security and ethical hacking.", semester: "3-1" },
+  { id: "3", code: "EC401", name: "IoT Systems", faculty: "Dr. Anita Desai", department: "Electronics", totalSeats: 70, remainingSeats: 30, description: "Design and implementation of Internet of Things systems.", semester: "3-2" },
+  { id: "4", code: "CS403", name: "Cloud Computing", faculty: "Prof. Vikram Patel", department: "Computer Science", totalSeats: 70, remainingSeats: 5, description: "Cloud infrastructure, services, and deployment models.", semester: "3-2" },
+  { id: "5", code: "ME401", name: "Robotics", faculty: "Dr. Suresh Nair", department: "Mechanical", totalSeats: 70, remainingSeats: 25, description: "Fundamentals of robot kinematics and control systems.", semester: "4-1" },
+  { id: "6", code: "CS404", name: "Blockchain Technology", faculty: "Dr. Meena Iyer", department: "Computer Science", totalSeats: 70, remainingSeats: 32, description: "Distributed ledger technology and smart contracts.", semester: "4-1" },
+  { id: "7", code: "CS405", name: "Natural Language Processing", faculty: "Dr. Arjun Reddy", department: "Computer Science", totalSeats: 70, remainingSeats: 10, description: "Text processing, sentiment analysis, and language models.", semester: "4-1" },
+  { id: "8", code: "EC402", name: "VLSI Design", faculty: "Prof. Kavitha Rao", department: "Electronics", totalSeats: 70, remainingSeats: 28, description: "Very Large Scale Integration design and verification.", semester: "3-2" },
 ];
 
 export const students: Student[] = [

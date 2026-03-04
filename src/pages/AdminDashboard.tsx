@@ -21,12 +21,17 @@ const AdminDashboard = () => {
   const [electivesList, setElectivesList] = useState<Elective[]>(initialElectives);
   const [showModal, setShowModal] = useState(false);
   const [showCsvModal, setShowCsvModal] = useState(false);
+  const [semesterFilter, setSemesterFilter] = useState("");
   const [newElective, setNewElective] = useState({
-    code: "", name: "", faculty: "", department: "", totalSeats: 70, description: "",
+    code: "", name: "", faculty: "", department: "", totalSeats: 70, description: "", semester: "3-1",
   });
 
   const allocated = students.filter((s) => s.allocatedElective).length;
   const unallocated = students.length - allocated;
+
+  const filteredElectives = semesterFilter === "" 
+    ? electivesList 
+    : electivesList.filter((e) => e.semester === semesterFilter);
 
   const handleAddElective = () => {
     if (!newElective.name || !newElective.code) return;
@@ -35,7 +40,7 @@ const AdminDashboard = () => {
       { ...newElective, id: String(prev.length + 1), remainingSeats: newElective.totalSeats },
     ]);
     setShowModal(false);
-    setNewElective({ code: "", name: "", faculty: "", department: "", totalSeats: 70, description: "" });
+    setNewElective({ code: "", name: "", faculty: "", department: "", totalSeats: 70, description: "", semester: "3-1" });
     toast.success("Elective added successfully!");
   };
 
@@ -71,18 +76,6 @@ const AdminDashboard = () => {
         </button>
         <button onClick={() => setShowCsvModal(true)} className="btn-secondary flex items-center gap-2 text-xs sm:text-sm">
           <Upload size={16} /> CSV Upload
-        </button>
-        <button
-          onClick={() => toast.success("AI allocation algorithm executed successfully!")}
-          className="flex items-center gap-2 px-4 sm:px-6 py-3 rounded-xl font-semibold text-xs sm:text-sm gradient-success text-success-foreground shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
-        >
-          <Play size={16} /> Run AI Allocation
-        </button>
-        <button
-          onClick={() => toast.success("Allocation has been locked!")}
-          className="flex items-center gap-2 px-4 sm:px-6 py-3 rounded-xl font-semibold text-xs sm:text-sm bg-warning text-warning-foreground shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
-        >
-          <Lock size={16} /> Lock
         </button>
         <button onClick={() => navigate("/analytics")} className="btn-secondary flex items-center gap-2 text-xs sm:text-sm">
           <BarChart3 size={16} /> Analytics
@@ -127,9 +120,22 @@ const AdminDashboard = () => {
 
       {/* Electives Table */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="glass-card-elevated overflow-hidden">
-        <div className="p-4 sm:p-6 border-b border-border/50 flex items-center justify-between">
+        <div className="p-4 sm:p-6 border-b border-border/50 flex items-center justify-between flex-wrap gap-3">
           <h3 className="font-display font-bold text-foreground text-sm sm:text-base">Manage Electives</h3>
-          <span className="badge-primary">{electivesList.length} courses</span>
+          <div className="flex items-center gap-3">
+            <select
+              value={semesterFilter}
+              onChange={(e) => setSemesterFilter(e.target.value)}
+              className="input-field text-xs py-2 px-3"
+            >
+              <option value="">All Semesters</option>
+              <option value="3-1">Semester 3-1</option>
+              <option value="3-2">Semester 3-2</option>
+              <option value="4-1">Semester 4-1</option>
+              <option value="4-2">Semester 4-2</option>
+            </select>
+            <span className="badge-primary">{filteredElectives.length} courses</span>
+          </div>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-xs sm:text-sm">
@@ -144,7 +150,7 @@ const AdminDashboard = () => {
               </tr>
             </thead>
             <tbody>
-              {electivesList.map((e) => {
+              {filteredElectives.map((e) => {
                 const pct = Math.round(((e.totalSeats - e.remainingSeats) / e.totalSeats) * 100);
                 return (
                   <tr key={e.id} className="border-t border-border/30 hover:bg-muted/20 transition-colors">

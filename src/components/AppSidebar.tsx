@@ -38,9 +38,8 @@ interface NavItem {
 const studentNav: NavItem[] = [
   { title: "Dashboard", url: "/dashboard/student", icon: LayoutDashboard },
   { title: "Electives", url: "/elective-selection", icon: BookOpen },
-  { title: "Preferences", url: "/elective-selection", icon: ListChecks },
   { title: "Results", url: "/allocation-result", icon: Award },
-  { title: "Profile", url: "/dashboard/student", icon: User },
+  { title: "Profile", url: "/student/profile", icon: User },
 ];
 
 const adminNav: NavItem[] = [

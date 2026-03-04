@@ -6,10 +6,13 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/context/AuthContext";
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
+import StudentRegister from "./pages/StudentRegister";
 import StudentDashboard from "./pages/StudentDashboard";
+import StudentProfile from "./pages/StudentProfile";
 import AdminDashboard from "./pages/AdminDashboard";
 import FacultyDashboard from "./pages/FacultyDashboard";
 import ElectiveSelection from "./pages/ElectiveSelection";
+import PreferenceCheckout from "./pages/PreferenceCheckout";
 import AllocationResult from "./pages/AllocationResult";
 import AnalyticsDashboard from "./pages/AnalyticsDashboard";
 import NotFound from "./pages/NotFound";
@@ -27,10 +30,13 @@ const AppRoutes = () => (
   <Routes>
     <Route path="/" element={<Landing />} />
     <Route path="/login" element={<Login />} />
+    <Route path="/register" element={<StudentRegister />} />
     <Route path="/dashboard/student" element={<ProtectedRoute role="student"><StudentDashboard /></ProtectedRoute>} />
+    <Route path="/student/profile" element={<ProtectedRoute role="student"><StudentProfile /></ProtectedRoute>} />
     <Route path="/dashboard/admin" element={<ProtectedRoute role="admin"><AdminDashboard /></ProtectedRoute>} />
     <Route path="/dashboard/faculty" element={<ProtectedRoute role="faculty"><FacultyDashboard /></ProtectedRoute>} />
     <Route path="/elective-selection" element={<ProtectedRoute role="student"><ElectiveSelection /></ProtectedRoute>} />
+    <Route path="/preference-checkout" element={<ProtectedRoute role="student"><PreferenceCheckout /></ProtectedRoute>} />
     <Route path="/allocation-result" element={<ProtectedRoute role="student"><AllocationResult /></ProtectedRoute>} />
     <Route path="/analytics" element={<ProtectedRoute role="admin"><AnalyticsDashboard /></ProtectedRoute>} />
     <Route path="*" element={<NotFound />} />

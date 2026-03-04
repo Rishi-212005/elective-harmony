@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, CheckCircle, Send, Search, Info } from "lucide-react";
+import { ArrowLeft, CheckCircle, ShoppingCart, Search, Info } from "lucide-react";
 import DashboardLayout from "@/components/DashboardLayout";
 import ElectiveCard from "@/components/ElectiveCard";
 import { electives } from "@/data/mockData";
@@ -35,13 +35,12 @@ const ElectiveSelection = () => {
     });
   };
 
-  const handleSubmit = () => {
+  const handleCheckout = () => {
     if (selected.length < MIN_PREFS) {
       toast.error(`Select at least ${MIN_PREFS} preferences`);
       return;
     }
-    setSubmitted(true);
-    toast.success("Preferences submitted successfully!");
+    navigate("/preference-checkout", { state: { selected } });
   };
 
   return (
@@ -76,20 +75,15 @@ const ElectiveSelection = () => {
               placeholder="Search electives..."
             />
           </div>
-          {!submitted && selected.length >= MIN_PREFS && (
+          {selected.length >= MIN_PREFS && (
             <motion.button
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              onClick={handleSubmit}
+              onClick={handleCheckout}
               className="btn-primary flex items-center justify-center gap-2"
             >
-              <Send size={16} /> Submit ({selected.length})
+              <ShoppingCart size={16} /> Checkout ({selected.length})
             </motion.button>
-          )}
-          {submitted && (
-            <span className="badge-success flex items-center gap-2 px-4 py-2">
-              <CheckCircle size={14} /> Submitted!
-            </span>
           )}
         </div>
       </motion.div>
@@ -129,7 +123,7 @@ const ElectiveSelection = () => {
             <ElectiveCard
               key={e.id}
               elective={e}
-              selectable={!submitted}
+              selectable
               selected={idx !== -1}
               preferenceLabel={idx !== -1 ? `Preference ${idx + 1}` : undefined}
               onSelect={() => toggle(e.id)}
